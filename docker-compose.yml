@@ -12,3 +12,23 @@ services:
       - ./db/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
     ports:
       - "27017:27017"
+
+  backend:
+    build: ./backend
+    container_name: backend_container
+    restart: always
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: "mongodb://admin:password123@mongo_container:27017"
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build: ./frontend
+    container_name: frontend_container
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
