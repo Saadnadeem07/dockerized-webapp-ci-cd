@@ -1,121 +1,141 @@
-# Assignment 1: Setup Containerized Development and Continuous Integration for Web Applications
+# **Project Name**
 
-# **Assignment Overview**
+## **Overview**
 
-### **Before Starting**
-
-- Read through the whole assignment.
-- **Create a group of three people**.
-- Create a private GitHub repository and add your group members.
-- Break down the project into smaller tasks and create GitHub issues to track each task.
-- Assign the tasks to each member.
-- Use proper Git workflows, including creating branches and merging into the main branch.
-- Create a proper folder structure (do not structure based on team members’ names or roll numbers).
-
-## **About Assignment**
-
-### **Objective**
-
-Students will select an existing project (e.g., their final year project (FYP), a course project, or a previous semester’s FYP) and containerize it using Docker. The project must include at least three services: **Frontend**, **Backend**, and **Database**. Students will build a secure, scalable, and automated web application development pipeline using Linux administration, Docker optimizations, and CI workflow. 
+This project is a web-based application built with **Node.js, Express, MongoDB**, and **React.js**. It uses **Docker** for containerization and **GitHub Actions/GitLab CI** for continuous integration and deployment.
 
 ---
 
-### **Task 1: Linux System Administration**
+## **Setup Instructions**
 
-1. **Systemd Service**
-    - Create a simple `systemd` service that runs a Python/NodeJS web server (using Flask/ExpressJS).
-    - Configure the service to restart automatically if it stops unexpectedly.
-2. **Kernel Tuning**
-    - Edit your `/etc/sysctl.conf` to adjust one network parameter (for example, increase `net.core.somaxconn`).
-    - Apply the changes and verify they are in effect (using `sysctl -p`).
-3. **Firewall Setup**
-    - Use UFW (or firewalld) to allow only HTTP/HTTPS traffic.
-    - Block all other incoming connections.
+### **1. Clone the Repository**
 
-**Deliverable:**
+```sh
+git clone https://github.com/yourusername/yourrepo.git
+cd yourrepo
+```
 
-A short script or a set of command-line instructions that create the service, adjust the kernel parameter, and configure the firewall.
+### **2. Install Dependencies**
 
----
+#### **Backend**
 
-### **Task 2: Bash Scripting**
+```sh
+cd backend
+npm install
+```
 
-1. **Health Check Script**
-    - Write a Bash script that checks if your web server (from Task 1) is running.
-    - If the server is not running, restart it and log the event (e.g., append a timestamped message to a log file).
-2. **Log Analysis**
-    - Given a sample web server log file, write a simple script (using AWK, grep, or sed) that:
-        - Counts the number of requests from each IP address.
-        - Displays the top 3 IP addresses with the most requests.
+#### **Frontend**
 
-**Deliverable:**
+```sh
+cd frontend
+npm install
+```
 
-Two scripts:
+### **3. Configure Environment Variables**
 
-- One for health checking and restarting the web server.
-- One for analyzing a sample log file and printing a summary report.
+Create a `.env` file in the **backend** and **frontend** directories and add the required variables:
 
----
+```env
+# Example for Backend
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/mydatabase
+JWT_SECRET=your_secret_key
 
-### **Task 3: Docker & Docker Compose Optimization**
+# Example for Frontend
+REACT_APP_API_URL=http://localhost:5000
+```
 
-1. **Containerization with Docker**
-    - Containerize the project by creating Dockerfiles for all services (backend, frontend, databases, etc.).
-    - Optimize Dockerfiles for minimal image size, fast build times, and security (e.g., multi-stage builds, using non-root users).
-    - Ensure the final image runs as a non-root user.
-2. **Docker Compose Setup for Local Development**
-    - Create a `docker-compose.yml` file that spins up all services locally.
-    - Ensure hot reloading of changes (e.g., using `nodemon` for Node.js apps, live reload for web servers).
+### **4. Run the Application (Without Docker)**
 
-**Deliverables:**
+#### **Backend**
 
-- Optimized Dockerfile.
-- A `docker-compose.yml` file with proper setup for each service, including bind mounts and configurations for hot-reloading.
+```sh
+cd backend
+npm start
+```
 
----
+#### **Frontend**
 
-### **Task 4: Continuous Integration (CI) Pipeline**
-
-1. **Task:**
-    - Set up Continuous Integration (CI) pipelines using GitHub Actions.
-    - The pipeline should perform the following tasks:
-        - **Build Containers:** Create separate jobs for building containers for all components (FE, BE, each microservice, etc.).
-        - **Run Unit Tests:** Use the Docker image created to run unit tests. If the project does not have unit tests, add a sample unit test.
-        - **Run Linter and SAST Jobs:** Implement linting and static application security testing (SAST) jobs for the project based on its programming language.
-        - **Push Containers to DockerHub:** Ensure proper tagging and authentication for pushing containers.
-- **When to Run Jobs:**
-    - On every commit to the main branch.
-    - On every pull request creation.
-- **Best Practices:**
-    - Use ignore files and paths to avoid unnecessary job execution.
-    - Optimize job execution using caching features of GitHub Actions.
-    - Use artifacts to publish unit test results.
-- **Deliverable:**
-    - CI pipeline configuration files (e.g., `.github/workflows/ci.yml`).
+```sh
+cd frontend
+npm start
+```
 
 ---
 
-### **Submission Guidelines**
+## **Docker Optimizations**
 
-1. Code, scripts, Dockerfiles, and CI/CD configurations must be hosted on GitHub/GitLab.
-2. Include a `README.md` with:
-    - Setup instructions.
-    - Docker optimizations.
-    - Local development environment setup.
-    - CI pipeline configuration and best practices.
+### **1. Build and Run with Docker**
+
+```sh
+docker-compose up --build
+```
+
+### **2. Optimizations Used:**
+
+- **Multi-stage builds** to reduce image size.
+- **Alpine-based images** for smaller footprint.
+- **Docker caching** for faster builds.
+
+---
+
+## **Local Development Environment Setup**
+
+### **Running Locally without Docker**
+
+1. **Start MongoDB** (if not using Docker):
+
+```sh
+mongod --dbpath /your/db/path
+```
+
+2. **Run Backend:**
+
+```sh
+cd backend
+npm run dev
+```
+
+3. **Run Frontend:**
+
+```sh
+cd frontend
+npm start
+```
 
 ---
 
-### **Evaluation Criteria**
+## **CI/CD Pipeline Configuration**
 
-1. **Linux System Administration & Bash Scripting (20%) -** Is the web server properly configured and logs are handled as mentioned?
-2. **Quality of Dockerfiles (20%)** - Are the Dockerfiles optimized for performance, size, and security?
-3. **Functionality of Docker Compose Setup (20%)** - Does the `docker-compose.yml` file support easy local development with hot-reloading?
-4. **CI Pipeline Automation (20%)**
-    - **Job Execution**: All jobs run without errors.
-    - **Rule-Based Triggers**: Pipeline triggers correctly on pushes to `main`, PRs, or tags.
-5. **CI Best Practices (20%)**
-    - **Optimization**: Use of caching (dependency/package caches), parallel job execution.
-    - **Secrets Management**: Secure handling of credentials via GitHub Secrets/Vault.
+### **GitHub Actions Workflow**
+
+A sample **GitHub Actions** CI/CD pipeline is included in `.github/workflows/ci-cd.yml`:
+
+#### **Pipeline Steps:**
+
+1. Checkout repository.
+2. Install dependencies and run tests.
+3. Build Docker images.
+4. Deploy to production.
+
+### **Best Practices Implemented:**
+
+- **Linting and Testing** before deployment.
+- **Automated build and push to Docker Hub**.
+- **Security checks using npm audit and docker scan**.
 
 ---
+
+## **Contributing**
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`git commit -m "Added new feature"`).
+4. Push to your branch (`git push origin feature-branch`).
+5. Create a Pull Request.
+
+---
+
+## **License**
+
+This project is licensed under the **MIT License**.
