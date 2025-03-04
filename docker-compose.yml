@@ -21,8 +21,13 @@ services:
       - mongodb
     environment:
       MONGO_URI: "mongodb://admin:password123@mongo_container:27017"
+      PORT: "5000"
     ports:
       - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: ["npm", "run", "start"]
 
   frontend:
     build: ./frontend
@@ -32,3 +37,10 @@ services:
       - backend
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
