@@ -27,6 +27,8 @@
 // };
 
 // export default Signup;
+
+import "../styles.css";
 import React, { useState } from "react";
 import { signup } from "../api";
 
