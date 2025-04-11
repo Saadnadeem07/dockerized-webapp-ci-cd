@@ -20,6 +20,11 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: password123
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd mongosh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout Repository
@@ -29,30 +34,35 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+          cache: 'npm'
 
       - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Create Backend .env
+        working-directory: backend
         run: |
-          cd backend
-          npm install
+          echo "MONGO_URI=mongodb://admin:password123@localhost:27017" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET || 'default_secret_for_testing' }}" >> .env
 
       - name: Run Backend Tests
-        run: |
-          cd backend
-          npm test
+        working-directory: backend
+        run: npm test
 
       - name: Install Frontend Dependencies
-        run: |
-          cd frontend
-          npm install
+        working-directory: frontend
+        run: npm ci
 
       - name: Build Frontend
-        run: |
-          cd frontend
-          npm run build
+        working-directory: frontend
+        run: npm run build
 
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -60,9 +70,9 @@ jobs:
       - name: Deploy Backend
         run: |
           echo "Deploying Backend..."
-          # Add backend deployment commands here (e.g., SSH, Docker push, etc.)
+          # Add backend deployment commands here
 
       - name: Deploy Frontend
         run: |
           echo "Deploying Frontend..."
-          # Add frontend deployment commands here (e.g., Vercel, Netlify, etc.)
+          # Add frontend deployment commands here
