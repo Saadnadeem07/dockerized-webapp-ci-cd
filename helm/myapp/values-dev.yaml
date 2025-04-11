@@ -1,0 +1,26 @@
+backend:
+  replicas: 1
+  resources:
+    limits:
+      cpu: "300m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+
+frontend:
+  replicas: 1
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+
+mongodb:
+  storage: "5Gi"
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
