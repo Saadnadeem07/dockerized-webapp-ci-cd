@@ -6,12 +6,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/yourusername/your-repo.git
+    repoURL: https://github.com/Saadnadeem07/dockerized-webapp-ci-cd.git
     path: helm/myapp
     targetRevision: HEAD
     helm:
       valueFiles:
-      - values-prod.yaml
+        - values-prod.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: prod
@@ -20,7 +20,7 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
     retry:
       limit: 5
       backoff:
