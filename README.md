@@ -1,6 +1,6 @@
 # Production Deployment Guide
 
-## Environment Setup
+## Environment Setup 
 - Dev: `kubectl apply -f kubernetes/namespaces/environments.yaml`
 - Prod: Requires additional security controls
 
