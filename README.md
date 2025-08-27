@@ -1,4 +1,4 @@
-# Production Deployment Guide
+# Production Deployment Guide 
 
 ## Environment Setup 
 - Dev: `kubectl apply -f kubernetes/namespaces/environments.yaml`
